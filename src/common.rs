@@ -896,7 +896,8 @@ pub fn get_api_server(api: String, custom: String) -> String {
     if !api.is_empty() {
         return api.to_owned();
     }
-    let api = option_env!("API_SERVER").unwrap_or_default();
+    // let api = option_env!("API_SERVER").unwrap_or_default();
+    let api = "http://172.16.222.200:21114";
     if !api.is_empty() {
         return api.into();
     }
@@ -1278,8 +1279,13 @@ pub fn create_symmetric_key_msg(their_pk_b: [u8; 32]) -> (Bytes, Bytes, secretbo
 }
 
 #[inline]
+// pub fn using_public_server() -> bool {
+//     option_env!("RENDEZVOUS_SERVER").unwrap_or("").is_empty()
+//         && crate::get_custom_rendezvous_server(get_option("custom-rendezvous-server")).is_empty()
+// }
+
 pub fn using_public_server() -> bool {
-    option_env!("RENDEZVOUS_SERVER").unwrap_or("").is_empty()
+    "172.16.222.200".is_empty()  // 假设服务器地址已经硬编码
         && crate::get_custom_rendezvous_server(get_option("custom-rendezvous-server")).is_empty()
 }
 
