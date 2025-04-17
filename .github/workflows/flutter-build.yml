@@ -5,7 +5,7 @@ on:
     inputs:
       upload-artifact:
         type: boolean
-        default: true
+        default: true  # 确保默认值为 true
       upload-tag:
         type: string
         default: "nightly"
@@ -75,15 +75,15 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          # - { target: i686-pc-windows-msvc        , os: windows-2022                  }
-          # - { target: x86_64-pc-windows-gnu       , os: windows-2022                  }
+          - { target: i686-pc-windows-msvc        , os: windows-2022                  }
+          - { target: x86_64-pc-windows-gnu       , os: windows-2022                  }
           - {
               target: x86_64-pc-windows-msvc,
               os: windows-2022,
               arch: x86_64,
               vcpkg-triplet: x64-windows-static,
             }
-          # - { target: aarch64-pc-windows-msvc, os: windows-2022, arch: aarch64 }
+          - { target: aarch64-pc-windows-msvc, os: windows-2022, arch: aarch64 }
     steps:
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@v6
@@ -296,15 +296,15 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          # - { target: i686-pc-windows-msvc        , os: windows-2022                  }
-          # - { target: x86_64-pc-windows-gnu       , os: windows-2022                  }
+          - { target: i686-pc-windows-msvc        , os: windows-2022                  }
+          - { target: x86_64-pc-windows-gnu       , os: windows-2022                  }
           - {
               target: i686-pc-windows-msvc,
               os: windows-2022,
               arch: x86,
               vcpkg-triplet: x86-windows-static,
             }
-          # - { target: aarch64-pc-windows-msvc, os: windows-2022 }
+          - { target: aarch64-pc-windows-msvc, os: windows-2022 }
     steps:
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@v6
