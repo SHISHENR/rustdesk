@@ -1,18 +1,14 @@
 name: Build the flutter version of the RustDesk
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       upload-artifact:
-        description: "是否上传构建产物"
-        required: false
-        default: true
         type: boolean
+        default: true
       upload-tag:
-        description: "发布标签"
-        required: false
-        default: "nightly"
         type: string
+        default: "nightly"
 
 # NOTE: F-Droid builder script 'flutter/build_fdroid.sh' reads environment
 # variables from this workflow!
