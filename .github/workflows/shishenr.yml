@@ -1,0 +1,118 @@
+name: Build All Platforms
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version string, e.g. 1.3.9'
+        required: true
+      tag:
+        description: 'Git tag name'
+        required: false
+        default: 'edge'
+
+jobs:
+  build:
+    name: Build ${{ matrix.arch }}.${{ matrix.format }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows
+          - os: windows-2022
+            arch: x86_64
+            format: exe
+          - os: windows-2022
+            arch: x86_64
+            format: msi
+          - os: windows-2022
+            arch: x86
+            format: exe
+
+          # Linux deb/rpm/AppImage/flatpak/tar.gz
+          - os: ubuntu-latest
+            arch: x86_64
+            format: deb
+          - os: ubuntu-latest
+            arch: x86_64
+            format: rpm
+          - os: ubuntu-latest
+            arch: aarch64
+            format: deb
+          - os: ubuntu-latest
+            arch: aarch64
+            format: rpm
+          - os: ubuntu-latest
+            arch: armv7
+            format: deb
+          - os: ubuntu-latest
+            arch: x86_64
+            format: AppImage
+          - os: ubuntu-latest
+            arch: aarch64
+            format: AppImage
+          - os: ubuntu-latest
+            arch: x86_64
+            format: flatpak
+          - os: ubuntu-latest
+            arch: aarch64
+            format: flatpak
+          - os: ubuntu-latest
+            arch: x86_64
+            format: tar.gz
+
+          # macOS
+          - os: macos-latest
+            arch: x86_64
+            format: dmg
+          - os: macos-latest
+            arch: aarch64
+            format: dmg
+
+          # Android
+          - os: ubuntu-latest
+            arch: armv7
+            format: apk
+          - os: ubuntu-latest
+            arch: aarch64
+            format: apk
+          - os: ubuntu-latest
+            arch: universal
+            format: apk
+
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+          submodules: recursive
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          pip3 install -r requirements.txt || true
+          rustup show || true
+
+      - name: Build
+        run: |
+          python3 build.py --platform ${{ matrix.os }} --arch ${{ matrix.arch }} --format ${{ matrix.format }} --version ${{ inputs.version }} --tag ${{ inputs.tag }}
+
+      - name: Find output
+        id: find_output
+        run: |
+          mkdir -p out
+          echo "filename=rustdesk-${{ inputs.version }}-${{ matrix.arch }}.${{ matrix.format }}" >> $GITHUB_ENV
+          touch "out/rustdesk-${{ inputs.version }}-${{ matrix.arch }}.${{ matrix.format }}"  # 示例用，你应改为真实构建产物路径
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.tag }}
+          files: out/rustdesk-${{ inputs.version }}-${{ matrix.arch }}.${{ matrix.format }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
