@@ -1,3 +1,3 @@
 [submodule "libs/hbb_common"]
 	path = libs/hbb_common
-	url = https://github.com/SHISHENR/hbb_common
+	url = https://github.com/SHISHENR/hbb_common/tree/b7d75348fda87cc07efc10bd1e41f195f0b05393
