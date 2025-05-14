@@ -2187,10 +2187,10 @@ class _AboutState extends State<_About> {
                   ).marginSymmetric(vertical: 4.0)),
               InkWell(
                   onTap: () {
-                    launchUrlString('https://rustdesk.com');
+                    launchUrlString('https://github.com/SHISHENR/rustdesk');
                   },
                   child: Text(
-                    translate('Website'),
+                    '由 SHISHEN 提供的构建',
                     style: linkStyle,
                   ).marginSymmetric(vertical: 4.0)),
               Container(
